@@ -4,20 +4,31 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
+import gdown
 
-# Set environment variable for protobuf compatibility
+# Set environment variable for protobuf compatibility (if needed)
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
-# Define class names directly
+# Define class names
 class_names = ['freshapples', 'freshbanana', 'freshcucumber', 'freshokra', 'freshoranges', 
                'freshpotato', 'freshtomato', 'rottenapples', 'rottenbanana', 'rottencucumber', 
                'rottenokra', 'rottenoranges', 'rottenpotato', 'rottentomato']
 
-# Function to load the model
+# Google Drive file ID (replace with your actual FILE_ID)
+GOOGLE_DRIVE_FILE_ID = 'https://drive.google.com/drive/folders/1NbNA1SX5GA4xpi1LT70ASyGv4Wtx8rYe?usp=sharing'  # e.g., '1A2B3C4D5E6F7G8H9I0J'
+MODEL_PATH = 'final_freshness_resnet_model.keras'
+
+# Download model from Google Drive if not present
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading model (298 MB)... This may take a moment."):
+        url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
+        gdown.download(url, MODEL_PATH, quiet=False)
+
+# Load the model
 @st.cache_resource
 def load_model():
     try:
-        model = tf.keras.models.load_model('final_freshness_resnet_model.keras')
+        model = tf.keras.models.load_model(MODEL_PATH)
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
@@ -25,7 +36,6 @@ def load_model():
 
 # Prediction function
 def predict_freshness(img):
-    # Load the model
     model = load_model()
     if model is None:
         return None, None
@@ -43,9 +53,9 @@ def predict_freshness(img):
 
     return class_names[predicted_class], round(confidence_score, 2)
 
-# Streamlit app main function
+# Streamlit app
 def main():
-    st.set_page_config(page_title="Freshness Detection System", page_icon=":apple:")
+    st.set_page_config(page_title="Freshness Detection System", page_icon="🍎")
     
     st.title("🍎 Freshness Detection System")
     st.write("Upload an image to check its freshness.")
@@ -55,11 +65,12 @@ def main():
 
     if uploaded_file is not None:
         # Display the uploaded image
-        image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+        img = Image.open(uploaded_file)
+        st.image(img, caption="Uploaded Image", use_column_width=True)
 
         # Predict freshness
-        predicted_label, confidence = predict_freshness(image)
+        with st.spinner("Predicting..."):
+            predicted_label, confidence = predict_freshness(img)
 
         # Display results
         if predicted_label is not None:
@@ -72,6 +83,8 @@ def main():
                 st.success(f"✅ The food item is fresh!")
             else:
                 st.warning(f"⚠️ The food item is rotten!")
+    else:
+        st.write("Please upload an image to get a prediction.")
 
 if __name__ == '__main__':
     main()
