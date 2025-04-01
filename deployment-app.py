@@ -6,7 +6,10 @@ import numpy as np
 from PIL import Image
 import gdown
 
-# Set environment variable for protobuf compatibility (if needed)
+# Set page config as the first Streamlit command
+st.set_page_config(page_title="Freshness Detection System", page_icon="🍎")
+
+# Set environment variable for protobuf compatibility
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 
 # Define class names
@@ -15,7 +18,7 @@ class_names = ['freshapples', 'freshbanana', 'freshcucumber', 'freshokra', 'fres
                'rottenokra', 'rottenoranges', 'rottenpotato', 'rottentomato']
 
 # Google Drive file ID (replace with your actual FILE_ID)
-GOOGLE_DRIVE_FILE_ID = '1sV4uOks9_XqI5vRCXTphjH22qI3MooCF'  # e.g., '1A2B3C4D5E6F7G8H9I0J'
+GOOGLE_DRIVE_FILE_ID = '1sV4uOks9_XqI5vRCXTphjH22qI3MooCF'  # Replace with the ID from your Google Drive file
 MODEL_PATH = 'final_freshness_resnet_model.keras'
 
 # Download model from Google Drive if not present
@@ -24,8 +27,8 @@ if not os.path.exists(MODEL_PATH):
         url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
         gdown.download(url, MODEL_PATH, quiet=False)
 
-# Load the model
-@st.cache_resource
+# Load the model (using st.cache for Streamlit 1.11.0 compatibility)
+@st.cache(allow_output_mutation=True)  # Suppress deprecation warning in 1.11.0
 def load_model():
     try:
         model = tf.keras.models.load_model(MODEL_PATH)
@@ -55,8 +58,6 @@ def predict_freshness(img):
 
 # Streamlit app
 def main():
-    st.set_page_config(page_title="Freshness Detection System", page_icon="🍎")
-    
     st.title("🍎 Freshness Detection System")
     st.write("Upload an image to check its freshness.")
 
