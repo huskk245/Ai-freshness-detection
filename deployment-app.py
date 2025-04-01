@@ -15,7 +15,7 @@ class_names = ['freshapples', 'freshbanana', 'freshcucumber', 'freshokra', 'fres
                'rottenokra', 'rottenoranges', 'rottenpotato', 'rottentomato']
 
 # Google Drive file ID (replace with your actual FILE_ID)
-GOOGLE_DRIVE_FILE_ID = 'https://drive.google.com/drive/folders/1NbNA1SX5GA4xpi1LT70ASyGv4Wtx8rYe?usp=sharing'  # e.g., '1A2B3C4D5E6F7G8H9I0J'
+GOOGLE_DRIVE_FILE_ID = '1sV4uOks9_XqI5vRCXTphjH22qI3MooCF'  # e.g., '1A2B3C4D5E6F7G8H9I0J'
 MODEL_PATH = 'final_freshness_resnet_model.keras'
 
 # Download model from Google Drive if not present
