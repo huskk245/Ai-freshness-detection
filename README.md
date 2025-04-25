@@ -187,4 +187,4 @@ This model successfully classifies fresh & rotten fruits/vegetables using **ResN
 ---
 
 ## 📜 Author
-Developed by **[Your Name]**
+Developed by **Vinay Paka**
