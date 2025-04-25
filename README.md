@@ -1,4 +1,4 @@
-# 🍎 Freshness Detection using ResNet50
+# 🍎 Freshness Detection System using ResNet50
 
 ## 📌 Overview
 This project is a deep learning model based on **ResNet50** to classify the freshness of fruits and vegetables. It uses **TensorFlow** and **Keras**, with image augmentation and fine-tuning techniques to improve accuracy.
